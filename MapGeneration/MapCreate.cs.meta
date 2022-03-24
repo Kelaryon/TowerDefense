@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 20e13887dfae38840a33231849807b02
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - simpleTile: {fileID: 3341384189680371688, guid: 7e6b4aa0670f08c409b4520e7b50e8f4, type: 3}
+  - straightRoadTile: {fileID: 7500373934997836408, guid: 194954b578f8fa24090aed8eb5846b1c, type: 3}
+  - cornerRoadTile: {fileID: 7405665844702887212, guid: 86557737505164e4fac67a1ffc776bb9, type: 3}
+  - enviroment: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
