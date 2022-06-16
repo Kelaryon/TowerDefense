@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Balista
+  m_text: Sphere
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b46c4b387f941e546af081088a3f7600, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tower: {fileID: 0}
+  tower: {fileID: 8136676143676653289, guid: 5d61c9fad569ebe40b76d8b159ab7807, type: 3}
 --- !u!114 &7389288916342792699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,3 +294,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c868420de46aec409419f0e0ff25d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  header: Charge Tower
+  content: Charge Tower; Cost:75Gold
