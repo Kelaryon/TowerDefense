@@ -145,8 +145,18 @@ MonoBehaviour:
   tControl: {fileID: 8650489527024693117, guid: 73c002a5044d19b4b831edad4cdd7d32, type: 3}
   randomEnviromentObjectList:
   - {fileID: 7738590757039247068, guid: 6075d38ca4a764e40a0f628f891c255d, type: 3}
-  - {fileID: 0}
-  enviromentGenerated: 0.515
+  - {fileID: 108507113624723981, guid: eebb56c82efbd8d4bb0eb6bd925a0e9d, type: 3}
+  - {fileID: 2222111361404534124, guid: 88f2fd29f58b9734683512546acec310, type: 3}
+  - {fileID: 9069115365609291303, guid: 60f79905accf3b24fa0114b941f1aac0, type: 3}
+  - {fileID: 1576488453971893466, guid: a778b631c6253a04899cb31bad047c81, type: 3}
+  - {fileID: 8903058273634794869, guid: f1fc5bb90ac285e4486771552d63bcb8, type: 3}
+  - {fileID: 38335279662140195, guid: 34d3f526198dae440bb2ce6005d86055, type: 3}
+  - {fileID: 2921669142860546498, guid: 62827684f2773b04c9a21b55023bf41b, type: 3}
+  - {fileID: 2921669142860546498, guid: e55a16918fb405a43bf39954caa1ce88, type: 3}
+  enviromentalObjectsName:
+  - Tree
+  - Rock
+  enviromentalObjectIndex: 1
 --- !u!1 &6636777593620252794
 GameObject:
   m_ObjectHideFlags: 0
