@@ -2,31 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimedDOTDebuff : TimedBuff
+public class TimedDOTDebuff : TimedStatusEffect
 {
-    private readonly EnemyHealth enemyHealth;
+    private readonly Enemy enemy;
+    private bool isActivated;
 
-    public TimedDOTDebuff(ScriptableBuff buff, GameObject obj) : base(buff, obj)
+    public TimedDOTDebuff(ScriptableStatusEffect buff, GameObject obj) : base(buff, obj)
     {
-        enemyHealth = obj.GetComponent<EnemyHealth>();
+        enemy = obj.GetComponent<Enemy>();
     }
 
     public override void End()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
+        isActivated = false;
+        Debug.Log("End");
     }
 
     protected override void ApplyEffect()
     {
-        StartCoroutine(DotDamage());
+        isActivated = true;
+        enemy.eHealth.StartCoroutine(DotDamage());
     }
     IEnumerator DotDamage()
     {
-        while (Duration > 0)
+        while (isActivated)
         {
             //Static Damage value
-            enemyHealth.IncDamage(0.75f);
+            //Debug.Log("HitS + duration:"+ Duration);
+            enemy.eHealth.IncDamage(2.75f);
             yield return new WaitForSeconds(1f);
+
         }
     }
 }

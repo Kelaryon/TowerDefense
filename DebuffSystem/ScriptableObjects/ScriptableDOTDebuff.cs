@@ -3,10 +3,10 @@ using UnityEngine;
 namespace ScriptableObjects
 {
     [CreateAssetMenu(menuName = "Debuffs/DOTDebuff")]
-    public class ScriptableDOTDebuff : ScriptableBuff
+    public class ScriptableDOTDebuff : ScriptableStatusEffect
     {
         public float damage;
-        public override TimedBuff InitializeBuff(GameObject obj)
+        public override TimedStatusEffect InitializeBuff(GameObject obj)
         {
             return new TimedDOTDebuff(this, obj);
         }

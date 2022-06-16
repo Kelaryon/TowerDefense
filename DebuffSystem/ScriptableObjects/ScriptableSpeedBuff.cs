@@ -1,14 +1,15 @@
 using UnityEngine;
 
+
 namespace ScriptableObjects
 {
-    [CreateAssetMenu(menuName = "Debuffs/SpeedBuff")]
-    public class ScriptableSpeedBuff : ScriptableBuff
+    [CreateAssetMenu(menuName = "StatusEffects/SpeedBuff")]
+    public class ScriptableSpeedBuff : ScriptableStatusEffect
     {
-        public float speedDecrese;
-        public override TimedBuff InitializeBuff(GameObject obj)
+        public float speedDecreseMultiplier;
+        public override TimedStatusEffect InitializeBuff(GameObject obj)
         {
-            return new TimedSpeedBuff(this, obj);
+            return new TimedSpeedDebuff(this, obj);
         }
     }
 }
