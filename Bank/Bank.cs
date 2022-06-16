@@ -7,23 +7,40 @@ using UnityEngine.EventSystems;
 
 public class Bank : MonoBehaviour
 {
-    public Tower towerPrefab;
     [SerializeField] int startBallance = 150;
     [SerializeField] int currentBallance;
     [SerializeField] TextMeshProUGUI dispalyBalance;
     public Camera mainCamera;
     public ControlPanel controlPanel;
+    public GameObject UIMenu;
     private RaycastHit hit;
     private GameObject selected;
-    bool isEnemySelected = false;
-    EnemyManager eManager;
+    public Tower towerPrefab;
+    public Tower holoTower;
+    HolographicTower hTower;
+    [SerializeField] public EnemyManager eManager;
+    private bool menuControl = false;
 
+    public void SetHTower(HolographicTower hTower)
+    {
+        this.hTower = hTower;
+    }
     public int CurrentBallance { get => currentBallance;}
     private void Update()
     {
-        if (Input.GetKey("escape"))
+        if (Input.GetKeyDown("escape"))
         {
-            Application.Quit();
+            if (menuControl == false)
+            {
+                ControlMenu();
+                Time.timeScale = 0;
+            }
+            else
+            {
+                ControlMenu();
+                Time.timeScale = 1;
+            }
+            menuControl = !menuControl;
         }
         if (Input.GetMouseButtonDown(0) && towerPrefab == null)
         {
@@ -36,21 +53,34 @@ public class Bank : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             towerPrefab = null;
-            DeSelect();
+            if (hTower != null) {
+                Destroy(hTower.gameObject); }
+            controlPanel.Deselect();
         }
-        if(isEnemySelected)
-        {
-            SelectDetail(selected);
-        }
+    }
+    private void ControlMenu()
+    {
+        controlPanel.gameObject.SetActive(menuControl);
+        UIMenu.SetActive(!menuControl);
+    }
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("StartScene");
     }
     private void Awake()
     {
         currentBallance = startBallance;
         UpadateDispaly();
+        Time.timeScale = 1;
+        //eManager = FindObjectOfType<EnemyManager>();
     }
     private void Start()
     {
-        eManager = FindObjectOfType<EnemyManager>();
+        eManager.EnemyBankStart(this);
     }
     public EnemyManager GetEnemyManager()
     {
@@ -92,43 +122,9 @@ public class Bank : MonoBehaviour
             if (hit.collider != null)
             {
                 selected = hit.collider.gameObject;
-                SelectDetail(selected);
+                controlPanel.SelectControl(selected.tag, selected);
             }
         }
     }
-    private void SelectDetail(GameObject selected)
-    {
-        if (selected != null)
-        {
-            string tag = selected.tag;
-            switch (tag)
-            {
-                case "Enemy":
-                    Enemy enemy = selected.GetComponent<Enemy>();
-                    controlPanel.Select(enemy.GetInfo(), enemy.icon);
-                    controlPanel.NoNTowerControl();
-                    isEnemySelected = true;
-                    break;
-                case "Tower":
-                    Tower tower = selected.GetComponent<Tower>();
-                    controlPanel.Select(tower.GetInfo(), tower.icon);
-                    controlPanel.TowerControl(tower);
-                    isEnemySelected = false;
-                    break;
-                default:
-                    Waypoint waypoint = selected.GetComponent<Waypoint>();
-                    controlPanel.Select(waypoint.GetInfo(), waypoint.icon);
-                    controlPanel.NoNTowerControl();
-                    isEnemySelected = false;
-                    break;
-            }
-            controlPanel.EnableDetailPanel(true);
-        }
-    }
-    private void DeSelect()
-    {
-        selected = null;
-        controlPanel.EnableDetailPanel(false);
-        controlPanel.NoNTowerControl();
-    }
+
 }
