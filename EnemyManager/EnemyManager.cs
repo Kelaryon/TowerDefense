@@ -4,12 +4,27 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    private List<Enemy> enemyList;
-
-    private void Start()
+    public WaveManager wManager;
+    public List<Enemy> enemyList;
+    private void Awake()
     {
         enemyList = new List<Enemy>();
-        GetAllCurrentEnemies();
+    }
+    private void Start()
+    {
+        //GetAllCurrentEnemies();
+
+    }
+    public IEnumerator SpawnEnemy(List<EnemySpawn> eSpawnList, Bank bank)
+    {
+        foreach (EnemySpawn esp in eSpawnList)
+        {
+            yield return new WaitForSeconds(esp.timer);
+            Enemy alfa = Instantiate(esp.enemy);
+            alfa.InitializeEnemy(bank);
+            alfa.gameObject.SetActive(true);
+
+        }
     }
     public void AddEnemy(Enemy enemy)
     {
@@ -31,4 +46,11 @@ public class EnemyManager : MonoBehaviour
             AddEnemy(en);
         }
     }
+    public void EnemyBankStart(Bank bank)
+    {
+        List<EnemySpawn> eSpawnList = wManager.oPool.PopulatePool(wManager.waveList);
+        StartCoroutine(SpawnEnemy(eSpawnList, bank));
+    }
+
+
 }
