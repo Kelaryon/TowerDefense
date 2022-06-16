@@ -19,7 +19,7 @@ public class RandomGrid : MonoBehaviour
         GridSize = size;
     }
 
-    public void SetGrid(int a, int b)
+    public int[,] SetGrid(int a, int b)
     {
         maxLength = GridSize * 2 + 1;
         roadLength = 0;
@@ -29,11 +29,11 @@ public class RandomGrid : MonoBehaviour
         do {
             end = RandomRoadStartAndEnd(a,b);
         }while (start == end);
-        //Debug.Log("Start: " + start);
-        //Debug.Log("End: " + end);
-        //DistanceCalc(start);
         CreateRoad(start);
+        GridMap[start[0], start[1]] = 1;
+        GridMap[end[0], end[1]] = 2;
         PrintArray(GridMap);
+        return GridMap;
         //Debug.Log("Distance: " + currentDistance);
     }
 
@@ -56,8 +56,8 @@ public class RandomGrid : MonoBehaviour
         {
             beta = Random.Range(0, b);
         }
-        GridMap[alfa, beta] = 1;
-        Debug.Log(alfa.ToString() + " " + beta.ToString());
+        //GridMap[alfa, beta] = 1;
+//        Debug.Log(alfa.ToString() + " " + beta.ToString());
         return new Vector2Int(alfa, beta);
     }
     public void PrintArray(int[,] arr)
@@ -106,7 +106,7 @@ public class RandomGrid : MonoBehaviour
             switch (x)
             {
                 case 0:
-                    Debug.Log("Up");
+//                    Debug.Log("Up");
                     if (CheckUp(alfa[0], alfa[1]))
                     {
                         if (maxLength - roadLength >= DistanceCalc(alfa + new Vector2Int(-1, 0)))
@@ -122,7 +122,7 @@ public class RandomGrid : MonoBehaviour
                     remainingDir++;
                     break;
                 case 1:
-                    Debug.Log("Down");
+ //                   Debug.Log("Down");
                     if (CheckDown(alfa[0], alfa[1]))
                     {
                         if (maxLength - roadLength >= DistanceCalc(alfa + new Vector2Int(1, 0)))
@@ -138,7 +138,7 @@ public class RandomGrid : MonoBehaviour
                     remainingDir++;
                     break;
                 case 2:
-                    Debug.Log("Left");
+  //                  Debug.Log("Left");
                     if (CheckLeft(alfa[0], alfa[1]))
                     {
                         if (maxLength - roadLength >= DistanceCalc(alfa + new Vector2Int(0, -1)))
@@ -154,7 +154,7 @@ public class RandomGrid : MonoBehaviour
                     remainingDir++;
                     break;
                 case 3:
-                    Debug.Log("Right");
+//                   Debug.Log("Right");
                     if (CheckRight(alfa[0], alfa[1]))
                     {
                         if (maxLength - roadLength >= DistanceCalc(alfa + new Vector2Int(0, 1)))

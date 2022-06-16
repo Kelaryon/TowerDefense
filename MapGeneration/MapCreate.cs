@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class MapCreate : MonoBehaviour
 {
-    // Start is called before the first frame update
-    RandomGrid randomGrid;
+    public RandomGrid randomGrid;
+    public byte sizeA;
+    public byte sizeB;
+    MapData mapData;
     public GameObject simpleTile;
     public GameObject straightRoadTile;
     public GameObject cornerRoadTile;
-    public int size;
     enum Dirrection {Up,Right,Down,Left};
     Dirrection lastPos;
     Dirrection nextPos;
@@ -20,9 +21,23 @@ public class MapCreate : MonoBehaviour
     GameObject pill;
     GameObject cube;
 
+
     private void Start()
     {
         randomGrid = gameObject.AddComponent<RandomGrid>();
+        mapData = new MapData();
+    }
+    public int[,] ReturnMap()
+    {
+        return mapData.GetGridMap();
+    }
+    public void SetMap(int[,] map)
+    {
+        mapData.SetGridMap(map);
+    }
+    public MapData ReturnMapData()
+    {
+        return mapData;
     }
     public void GenMap()
     {
@@ -39,10 +54,66 @@ public class MapCreate : MonoBehaviour
         path.transform.parent = enviroment.transform;
         worldTile.transform.parent = enviroment.transform;
         //Matrix Generation;
-        randomGrid.GridSizeSet(size); // For the square matrix
-        randomGrid.SetGrid(size,size); // for the paralelipipedic matrix
+        randomGrid.GridSizeSet((sizeA+sizeB)/2); // For the square matrix
+        SetMap(randomGrid.SetGrid(sizeA,sizeB)); // for the paralelipipedic matrix
+        //Problem Here
+        mapData.SetRoadVector(randomGrid.roadList);
+        mapData.SetLength(sizeB);
+        mapData.SetWidth(sizeA);
+        CreateMap();
+
+    }
+
+
+    public void GenMap(List<Vector2Int> RoadList, int[,] GridMap, byte length,byte width)
+    {
+        //Delete old map on generating another
+        if (enviroment.transform.childCount > 0)
+        {
+            foreach (Transform child in enviroment.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+        path = new GameObject("Path");
+        worldTile = new GameObject("WorldTile");
+        path.transform.parent = enviroment.transform;
+        worldTile.transform.parent = enviroment.transform;
+        if (pill != null)
+        {
+            pill.transform.position = new Vector3(RoadList[0][0] * 10, 0, RoadList[0][1] * 10);
+            cube.transform.position = new Vector3(RoadList[RoadList.Count - 1][0] * 10, 0, RoadList[RoadList.Count - 1][1] * 10);
+        }
+        else
+        {
+            pill = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            pill.transform.position = new Vector3(RoadList[0][0] * 10, 0, RoadList[0][1] * 10);
+            cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.position = new Vector3(RoadList[RoadList.Count - 1][0] * 10, 0, RoadList[RoadList.Count - 1][1] * 10);
+        }
+        for (int i = 0; i < width; i++)
+        {
+            for (int k = 0; k < length; k++)
+            {
+                if (GridMap[i, k] == 0)
+                {
+                    var ground = Instantiate(simpleTile, new Vector3(10 * i, 0, 10 * k), Quaternion.identity);
+                    ground.transform.parent = worldTile.transform;
+                }
+            }
+        }
+        StartPoint(RoadList[1], RoadList[0]);
+        for (int i = 1; i < RoadList.Count - 1; i++)
+        {
+            nextPos = CheckNext(RoadList[i + 1], RoadList[i]);
+            RoadAngle(RoadList[i][0], RoadList[i][1]);
+        }
+    }
+    public void CreateMap()
+    {
         // Pill(start) and Cube(end) instantiation on map generation and movemet on other generations
-        if (pill != null) {
+        if (pill != null)
+        {
             pill.transform.position = new Vector3(randomGrid.roadList[0][0] * 10, 0, randomGrid.roadList[0][1] * 10);
             cube.transform.position = new Vector3(randomGrid.roadList[randomGrid.roadList.Count - 1][0] * 10, 0, randomGrid.roadList[randomGrid.roadList.Count - 1][1] * 10);
         }
@@ -53,24 +124,25 @@ public class MapCreate : MonoBehaviour
             cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cube.transform.position = new Vector3(randomGrid.roadList[randomGrid.roadList.Count - 1][0] * 10, 0, randomGrid.roadList[randomGrid.roadList.Count - 1][1] * 10);
         }
-        for (int i = 0; i < size;i++)
+        for (int i = 0; i < sizeA; i++)
         {
-            for(int k = 0; k < size; k++)
+            for (int k = 0; k < sizeB; k++)
             {
                 if (randomGrid.GridMap[i, k] == 0)
                 {
-                    var ground = Instantiate(simpleTile,new Vector3(10*i,0, 10 * k),Quaternion.identity);
+                    var ground = Instantiate(simpleTile, new Vector3(10 * i, 0, 10 * k), Quaternion.identity);
                     ground.transform.parent = worldTile.transform;
                 }
             }
         }
         StartPoint(randomGrid.roadList[1], randomGrid.roadList[0]);
-        for(int i = 1; i < randomGrid.roadList.Count-1; i++)
+        for (int i = 1; i < randomGrid.roadList.Count - 1; i++)
         {
             nextPos = CheckNext(randomGrid.roadList[i + 1], randomGrid.roadList[i]);
             RoadAngle(randomGrid.roadList[i][0], randomGrid.roadList[i][1]);
         }
     }
+
     Dirrection CheckNext(Vector2Int nextPoz, Vector2Int currentPoz)
     {
         Dirrection alfa;
@@ -186,6 +258,8 @@ public class MapCreate : MonoBehaviour
         }
 
     }
+
+    //Used to check the direction of the start Tile
     void StartPoint(Vector2Int nextPoz, Vector2Int currentPoz)
     {
         if (nextPoz[0] - currentPoz[0] == 0) //Left or Right check
@@ -208,6 +282,17 @@ public class MapCreate : MonoBehaviour
             else
             {
                 lastPos = Dirrection.Down;
+            }
+        }
+    }
+
+    public void GenerateLoadedRoad(int[,] gridMap, byte a, byte b)
+    {
+        for(int i = 0; i< b ; i++)
+        {
+            for(int j = 0; j < a; j++)
+            {
+                //gridMap[i, j];
             }
         }
     }
